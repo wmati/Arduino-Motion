@@ -16,7 +16,6 @@ void setup() {
   tft.begin();
   tft.setTextWrap(true);
 
-  {
     long duration1;
     pinMode(pingPin, OUTPUT);
     digitalWrite(pingPin, LOW);
@@ -27,23 +26,22 @@ void setup() {
 
     pinMode(pingPin, INPUT);
     duration1 = pulseIn(pingPin, HIGH);
-
     // convert the time into a distance
- 
-    cm1 = microsecondsToCentimeters(duration1);
-
-
-   
+   cm1 = microsecondsToCentimeters(duration1);
    iText(cm1);
-  }
   
 
 }
 
-
+long line = 0;  //counter for lines printed
 void loop(void) {
     long duration, inches, cm;
-    
+    if (line > 17) {
+        tft.fillScreen(ILI9341_BLACK);
+        tft.setCursor(0,0);
+        line = 0;
+    }
+ 
     pinMode(pingPin, OUTPUT);
     digitalWrite(pingPin, LOW);
     delayMicroseconds(2);
@@ -59,38 +57,38 @@ void loop(void) {
     cm = microsecondsToCentimeters(duration);
 
    
+
+   
     if (cm+1 == cm1 || cm-1 == cm1 || cm1 == cm) {
       delay(1);
     } else {
-    testText(cm);
-    
+          testText(cm);
     }
 
   }
-
 unsigned long testText(long cm1) {
+
+ 
 
   tft.setRotation(1);
   tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
-  
   if (cm1 >= 100){
-    tft.println("______");
+   
     tft.println();
     tft.print(cm1*0.01);
     tft.print(" m away");
     tft.println();
     delay(500);
   } else {
-  tft.println("______");
   tft.println();
   tft.print(cm1);
   tft.print(" cm away");
   tft.println();
   delay(500);
-
+  
    
   }
-  
+    line++;
 }
 
 unsigned long iText(long cm1) {
@@ -122,12 +120,8 @@ unsigned long iText(long cm1) {
   tft.print("Disruptions");
   tft.println();
   delay(0);
-
+ 
 }
-
-
-
-
 long microsecondsToInches(long microseconds) {
   return microseconds / 74 / 2;
 }
@@ -135,7 +129,6 @@ long microsecondsToInches(long microseconds) {
 long microsecondsToCentimeters(long microseconds) { 
   return microseconds / 29 / 2;
 }
-
 
 
 
